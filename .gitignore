@@ -1,0 +1,20 @@
+# errors and warnings
+error.txt
+warnings.txt
+info.txt
+
+# image files created using simnd
+*.dmi 
+*.smi
+*.hv
+*.v
+*.ahv
+
+# simind output files
+output.*
+
+# simind.smc in case of duplication
+simind.smc 
+
+# temporary files
+tmp_*
