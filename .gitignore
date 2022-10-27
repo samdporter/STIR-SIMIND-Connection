@@ -21,3 +21,6 @@ tmp_*
 
 #tumour file created in notebook
 tumour.inp
+
+# image plots
+*.png

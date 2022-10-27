@@ -20,6 +20,17 @@ import glob
 
 import matplotlib.pyplot as plt
 
+def plot_and_save(image, fname, slice = False):
+        ''' simple image plot and save function '''
+        plt.subplot(111)
+        if slice:
+            plt.imshow(np.squeeze(stirextra.to_numpy(image))[slice])
+        else:
+            plt.imshow(np.squeeze(stirextra.to_numpy(image)))            
+        plt.title(fname)
+        plt.savefig(fname)
+        plt.show()   
+
 def main():
 
     # firstly let's remove all previous outputs from simind in case this has been run before
@@ -36,11 +47,8 @@ def main():
 
     if show_plot:
         # let's have a loook at out ground truth image
-        plt.figure()
-        plt.subplot(111)
-        plt.imshow(np.squeeze(stirextra.to_numpy(image)))
-        plt.title('Ground Truth Image')
-        plt.show()
+        slice = image.get_lengths()[1]//2 # middle slice
+        plot_and_save(image, "ground_truth", slice = slice)
 
     # Now we'll add an attenuation image
     if not attenuation:
@@ -60,7 +68,7 @@ def main():
     #    * /FS: defines the prefix for the .smi emission image file
     #    * /FD: defines the prefix for rhe .dmi attenuation image file
     
-    os.system("simind input.smc output/NN:0.001/PX:0.4/FS:emission_image.smi/FD:attenuation_image_simind.dmi")
+    os.system("simind input.smc output/NN:0.1/PX:0.4/FS:emission_image.smi/FD:attenuation_image_simind.dmi")
 
     # And (assuming the preious cell ran) we have now simulated our SPECT data!
     # Next we need to get this data into a format the SIRF will recognise. 
@@ -74,12 +82,9 @@ def main():
     simulated_data =  stir.ProjData.read_from_file("output.hs")
 
     if show_plot:
+        slice = simulated_data.get_num_sinograms()//2
         # The sinogram looks like this
-        plt.figure()
-        plt.subplot(111)
-        plt.imshow(np.squeeze(stirextra.to_numpy(simulated_data)))
-        plt.title('Simulated Sinogram')
-        plt.show()
+        plot_and_save(simulated_data, "simulated_data", slice = slice)
 
     ### We now use this simulated data to make a rough reconstruction using back projection
 
@@ -99,11 +104,8 @@ def main():
 
     if show_plot:
         # Let's see what this looks like!
-        plt.figure()
-        plt.subplot(111)
-        plt.imshow(np.squeeze(stirextra.to_numpy(target)))
-        plt.title('Backprojection Image')
-        plt.show()
+        slice = target.get_lengths()[1]//2 # middle slice
+        plot_and_save(target, "backprojected_image", slice = slice)
 
 main()
 
