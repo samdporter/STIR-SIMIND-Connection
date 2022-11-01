@@ -1,106 +1,102 @@
-generate image parameters :=
-; a sample file on how to use generate_image
+generate_image Parameters :=
 
-;;;;; a number of keywords as in Interfile
-; (possible values are given by using a | notation)
-
-; optional: values: PET|nucmed *defaults to PET for backwards compatibility)
-imaging modality:=PET
-; optional (but recommended). Needs to be a STIR supported name
-originating system := ECAT 931
-; optional patient position keywords (defaulting to "unknown")
-; orientation: allowed values: head_in|feet_in|other|unknown
-patient orientation := head_in
-; rotation: allowed values: prone|supine|other|unknown
+imaging modality:=nucmed
+patient orientation := feet_in
 patient rotation :=  supine
-; optional keywords to set image timing
-image duration (sec) := 20 ; defaults to -1 (i.e. unknown)
-image relative start time (sec) := 0 ; defaults to zero
 
-;;;;; specific keywords
 
 output filename:=emission_image.smi
-; optional keywords to specify the output file format
-; example below uses Interfile with 16-bit unsigned integers
 output file format type:= Interfile
   interfile Output File Format Parameters:=
     number format := unsigned integer
     number_of_bytes_per_pixel:=2
-    ; fix the scale factor to 1
-    ; comment out next line to let STIR use the full dynamic 
-    ; range of the output type
     scale_to_write_data:= 1
   End Interfile Output File Format Parameters:=
 
 X output image size (in pixels) := 64
 Y output image size (in pixels) := 64
 Z output image size (in pixels) := 64
-X voxel size (in mm) := 4
+X voxel size (in mm) := 4 
 Y voxel size (in mm) := 4
 Z voxel size (in mm) := 4
 
-; parameters that determine subsampling of border voxels
-; to obtain smooth edges
-; setting these to 1 will just check if the centre of the voxel is in or out
-; default to 5
-; Z number of samples to take per voxel := 5
-; Y number of samples to take per voxel := 5
-; X number of samples to take per voxel := 5
+  Z number of samples to take per voxel := 1
+  Y number of samples to take per voxel := 1
+  X number of samples to take per voxel := 1
 
-; now follows a list of shapes and their values
-; each will be added to the image (so values accumulate)
-; see Shape3D hierarchy for possibly shapes
 
+; body-like shape
 shape type:= ellipsoidal cylinder
 Ellipsoidal Cylinder Parameters:=
-   radius-x (in mm) := 100
-   radius-y (in mm) := 100
-   length-z (in mm) := 400
-
-   ; next keyword can be used for non-default axes
-   ; values below are give a rotation around y for 90 degrees (swapping x and z)
-   ; Warning: this uses the STIR convention {z,y,x}
-   ; direction vectors (in mm):= { {0,0,1}, {0,1,0}, {-1,0,0}}
-   ; origin w.r.t. to standard STIR coordinate system (middle of first plane)
-   origin (in mm):={0, 3.0192, -0.590588}
+   radius-x (in mm) := 96
+   radius-y (in mm) := 84
+   length-z (in mm) := 200
+   origin (in mm):={128, 0, 0} 
+   ; z, y, x
    END:=
-value := 50
+value := 5
 
+; central point
+;next shape :=
+;shape type:= Ellipsoid
+;Ellipsoid Parameters:=
+;   radius-x (in mm):= 1
+;   radius-y (in mm):= 1
+;   radius-z (in mm):= 1
+;   origin (in mm):={128, 0, 0}
+;   END:=
+;value := 5
+
+
+; lung like shapes
+
+; lung 1
 next shape :=
+shape type:= ellipsoidal cylinder
+Ellipsoidal Cylinder Parameters:=
+   radius-x (in mm) := 32
+   radius-y (in mm) := 64
+   length-z (in mm) := 180
+   origin (in mm):={128, 0, 40} ; z, y, x
+   END:=
+value := -5
 
-shape type:= ellipsoid
+
+; lung 2
+next shape :=
+shape type:= ellipsoidal cylinder
+Ellipsoidal Cylinder Parameters:=
+   radius-x (in mm) := 32
+   radius-y (in mm) := 64
+   length-z (in mm) := 180
+   origin (in mm):={128, 0, -40} ; z, y, x
+   END:=
+value := -5
+
+
+; lung lesion-like shape
+next shape :=
+shape type:= Ellipsoid
 Ellipsoid Parameters:=
-     radius-x (in mm):= 80
-     radius-y (in mm):= 60
-     radius-z (in mm):= 400
-     direction vectors (in mm) := { {0,0,1}, {0,1,0}, {-1,0,0}}
-     origin (in mm):={0, 3.0192, -40.590588}
-End:=
-value:= -25
+   radius-x (in mm) := 12
+   radius-y (in mm) := 12
+   radius-z (in mm) := 12
+   origin (in mm):={128, -24, 32} ; z, y, x
+   END:=
+value := 3
 
+
+
+; spine like shape
 next shape :=
-
-shape type:= ellipsoid
-Ellipsoid Parameters:=
-     radius-x (in mm):= 80
-     radius-y (in mm):= 60
-     radius-z (in mm):= 400
-     direction vectors (in mm) := { {0,0,1}, {0,1,0}, {-1,0,0}}
-     origin (in mm):={0, 3.0192, 40.590588}
-End:=
-value:= -25
-
-next shape :=
-
-; now cut lower activity in a box
-shape type:= Box3D
-box parameters:=
-origin (in mm):={0, 70, -0.590588}
-length-x (in mm):=20
-length-y (in mm):=30
-length-z (in mm):=400
-END:=
-value:= 10
+shape type:= ellipsoidal cylinder
+Ellipsoidal Cylinder Parameters:=
+   radius-x (in mm) := 12
+   radius-y (in mm) := 12
+   length-z (in mm) := 200
+   origin (in mm):={128, 64, 0} ; z, y, x
+  END:=
+value := 3
 
 
 END:=

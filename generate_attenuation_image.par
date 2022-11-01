@@ -17,13 +17,21 @@ Ellipsoidal Cylinder Parameters:=
    ; but you could use anything else of course
    radius-x (in mm):=100
    radius-y (in mm):=100
-   length-z (in mm):=110
+   length-z (in mm):=400
    origin (in mm):={0, 3.0192, -0.590588}
    END:=
 ; set value to attenuation of water (in cm^-1)
 value :=.096
 
 ; could add other objects here (see generate_image samples for an example)
-; next shape :=
-
+;spine like shape
+next shape :=
+shape type:= ellipsoidal cylinder
+Ellipsoidal Cylinder Parameters:=
+   radius-x (in mm) := 12
+   radius-y (in mm) := 12
+   length-z (in mm) := 200
+   origin (in mm):={128, 64, 0} ; z, y, x
+  END:=
+value := 0.4
 END:=
