@@ -11,7 +11,7 @@ info.txt
 *.ahv
 
 # simind output files
-output.*
+output*
 
 # simind.smc in case of duplication
 simind.smc 
