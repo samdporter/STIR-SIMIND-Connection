@@ -1,5 +1,3 @@
-### SIRF_SIMIND Tutorial ###
+### STIR_SIMIND Tutorial ###
 
-Will require SIRF and simind
-
-See ...
+simple notebook and script to demonstrate the use of STIR with the SIMIND MonteCarlo SPECT simulator
