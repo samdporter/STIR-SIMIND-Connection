@@ -24,3 +24,7 @@ tumour.inp
 
 # image plots
 *.png
+
+# test notebooks
+test.ipynb
+STIR_simind_tumour.ipynb

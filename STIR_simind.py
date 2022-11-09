@@ -108,7 +108,7 @@ def main(args):
     #    * /FD: defines the prefix for rhe .dmi attenuation image file
     
 
-    os.system("simind input.smc output/NN:1/PX:0.4/FS:emission_image.smi/FD:attenuation_image_simind.dmi")
+    os.system("simind input.smc output/NN:1/PX:0.4/FS:emission_image/FD:attenuation_image_simind")
 
 
     # And (assuming the preious cell ran) we have now simulated our SPECT data!
@@ -145,6 +145,8 @@ def main(args):
     ### we now want to do something with this data. First we create a STIR forward and back projector pair
     projector = stir.ProjectorByBinPairUsingProjMatrixByBin(acq_model_matrix)
     projector.set_up(simind_projdata.get_proj_data_info(), image)
+
+    #projector.get_back_projector.back_project()
 
     ### How does simlauted data compare to a STIR forward projection?
     

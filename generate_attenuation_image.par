@@ -1,5 +1,5 @@
 generate_image Parameters :=
-output filename:=attenuation_image.dmi
+output filename:=attenuation_image.hv
 X output image size (in pixels):=64
 Y output image size (in pixels):=64
 Z output image size (in pixels):=64
@@ -15,16 +15,39 @@ shape type:= ellipsoidal cylinder
 Ellipsoidal Cylinder Parameters:=
    ; use same parameters as emission image in this example simulation
    ; but you could use anything else of course
-   radius-x (in mm):=100
-   radius-y (in mm):=100
-   length-z (in mm):=400
-   origin (in mm):={0, 3.0192, -0.590588}
+   radius-x (in mm) := 96
+   radius-y (in mm) := 84
+   length-z (in mm) := 200
+   origin (in mm):={128, 0, 0} 
+   initial angle (in deg) :=0
+   final angle (in deg) :=180
    END:=
 ; set value to attenuation of water (in cm^-1)
-value :=.096
+value :=3
 
-; could add other objects here (see generate_image samples for an example)
-;spine like shape
+next shape :=
+shape type:= ellipsoidal cylinder
+Ellipsoidal Cylinder Parameters:=
+   radius-x (in mm) := 32
+   radius-y (in mm) := 64
+   length-z (in mm) := 180
+   origin (in mm):={128, 0, 40} ; z, y, x
+   END:=
+value := -0.09
+
+
+; lung 2
+next shape :=
+shape type:= ellipsoidal cylinder
+Ellipsoidal Cylinder Parameters:=
+   radius-x (in mm) := 32
+   radius-y (in mm) := 64
+   length-z (in mm) := 180
+   origin (in mm):={128, 0, -40} ; z, y, x
+   END:=
+value := -0.09
+
+; spine like shape
 next shape :=
 shape type:= ellipsoidal cylinder
 Ellipsoidal Cylinder Parameters:=
@@ -33,5 +56,5 @@ Ellipsoidal Cylinder Parameters:=
    length-z (in mm) := 200
    origin (in mm):={128, 64, 0} ; z, y, x
   END:=
-value := 0.4
+value := 0.2
 END:=
