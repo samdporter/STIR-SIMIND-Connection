@@ -1,0 +1,6 @@
+[attr]pyfiles
+*.py   pyfiles
+*.v     -text -diff
+*.s     -text -diff
+*.sh    eol=lf
+*.pdf   -text -diff
