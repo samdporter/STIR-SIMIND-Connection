@@ -1,6 +1,14 @@
 [attr]pyfiles
 *.py   pyfiles
+* text=auto
+*.ipynb filter=nbstripout
+*.ipynb diff=ipynb
+
 *.v     -text -diff
 *.s     -text -diff
+
 *.sh    eol=lf
+*.win   eol=lf
+
 *.pdf   -text -diff
+*.png   -text -diff
