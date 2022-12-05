@@ -480,6 +480,9 @@ density map –index 42, index-35 and index-56 will be relevant)
 To test: Does SIMIND require Uint16 \[0 to 65535\] or signed int 16
 \[-32768 to +32767\]
 
+To test: z-slice order (and general conversion between SIMIND's Fortran order {2, 1, 0} and STIR's C++ order {0, 1, 2})
+> note: binary (input) data could be read in anyway
+
 To do: RG to check where “signed integer” vs “integer” makes a
 difference (one is OK for STIR, but not for SIMIND)
 
