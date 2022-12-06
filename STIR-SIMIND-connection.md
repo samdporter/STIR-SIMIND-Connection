@@ -487,6 +487,7 @@ To test: z-slice order (and general conversion between SIMIND's Fortran order
 
 To do: RG to check where “signed integer” vs “integer” makes a
 difference (one is OK for STIR, but not for SIMIND)
+> Conclusion: STIR needs "signed integer" (or "unsigned integer") when defining data types, doesn't recognise "integer"
 
 To test: check how to get directory referencing to work for all systems (currently
 can get mixed up with runtime switches)
