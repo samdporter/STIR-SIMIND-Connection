@@ -7,6 +7,10 @@ Contact: <Rebecca.gillen.18@ucl.ac.uk>, <Sam.Porter.18@ucl.ac.uk>
 Useful links
 ============
 
+**2022 STIR Users Group - 'STIR-SIMIND Connection' Presentation**
+
+<https://stir.sourceforge.net/2022UsersMeeting/>
+
 **SIMIND Manual v7.0**
 
 <http://www2.msf.lu.se/simind/download/simind_manual.pdf>
@@ -22,10 +26,9 @@ of Main page in change)
 
 <http://stir.sourceforge.net/documentation/STIR-developers-overview.pdf>
 
-**STIR\_SIMIND Tutorial Repo (includes Jupyter notebook demo and example
-STIR and SIMIND files)**[^1]
+**Jupyter notebook demo and example STIR and SIMIND files)**[^1]
 
-<https://github.com/samdporter/STIR_SIMIND>
+TO DO: ADD LINKS TO SPECIFIC FILES WITHIN THIS REPO
 
 Getting started with SIMIND
 ===========================
@@ -83,15 +86,13 @@ Opens “Main” page in order to edit simind.smc file
 
 -   Should be considered a temporary file
 
-    ![](.//media/image1.png){width="5.314189632545932in"
-    height="2.9791666666666665in"}
+    ![](.//media/image1.png)
 
 &gt; change filename.smc
 
 Opens “Main” page in order to edit a specific \*.smc file
 
-![](.//media/image2.png){width="6.145833333333333in"
-height="3.4270833333333335in"}
+![](.//media/image2.png)
 
 Once this menu is opened, you can:
 
@@ -232,6 +233,8 @@ character limit of 11 characters stored using **change**
 
 See simind manual for full list of possible runtime switches.
 
+See simind manual for how to use switches in addition to directory referencing (linux can get mixed up).
+
 Output files from SIMIND
 ========================
 
@@ -265,9 +268,8 @@ Reconstructing SIMIND Data using STIR
 SIMIND output data can be reconstructed with STIR. First, a few tweaks
 need to be made to the header file to convert it to a STIR-friendly
 form. Steps are included below, but note that this can be done quickly
-and efficiently using the convertSIMINDToSTIR.sh script (available here
-<https://github.com/samdporter/STIR_SIMIND>, also need the corresponding
-.awk file)
+and efficiently using the [convertSIMINDToSTIR.sh](./scripts/convertSIMINDToSTIR.sh) script, note that you will also need the corresponding
+.awk file in the same folder)
 
 -   make a copy of the .h00 file, and rename it with extension \*.hs
 
@@ -394,8 +396,7 @@ Other key differences & things to be aware of
 
     -   STIR
 
-        ![](.//media/image3.png){width="6.268055555555556in"
-        height="1.7590277777777779in"}
+        ![](.//media/image3.png)
 
         <http://stir.sourceforge.net/wiki/index.php/STIR_FAQ#How_does_the_STIR_coordinate_system_work_.28e.g._for_generate_image.29>
 
@@ -414,7 +415,7 @@ Other key differences & things to be aware of
             rotates in the ZY plane either clockwise or
             counter-clockwise (controlled by index 30)
 
-![](.//media/image4.png){width="4.34375in" height="2.4375in"}
+![](.//media/image4.png)
 
 Disclaimer:
 ===========
@@ -427,12 +428,11 @@ The authors welcome any additions/corrections.
 Appendix 1 – old Main page in change for SIMIND v6.1
 ====================================================
 
-![](.//media/image5.png){width="6.268055555555556in"
-height="4.283333333333333in"}
+![](.//media/image5.png)
 
 
 
-[^1]: These should soon be added to STIR examples
+[^1]: These may be added to STIR examples
 
 [^2]: In v6.2, it was possible to update comment sentence, but don’t
     seem to be able to do this with V7 (manual says you can change using
