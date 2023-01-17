@@ -174,30 +174,30 @@ Parameters required to configure simulation to be compatible with voxelwise inpu
     -   This corresponds with a STIR simulation start angle of 180
         degrees
 
--   Index 12 corresponds to radius of rotation
+-   **Index 12** corresponds to radius of rotation
 
     -   Note that units are in cm throughout (important for defining
         pixel sizes and radius of rotation)
 
 Note that indices 79 and 82 (source map dimensions) must be equal
 
-To test: do density map dimensions need to be isotropic/match source map
-dimensions? (indices 34, 78, 81)
+<!--- To test: do density map dimensions need to be isotropic/match source map
+dimensions? (indices 34, 78, 81) -->
 
-Recommend setting indices 34, 76, 77, 78, 79, 81 and 82 the same (await
-results of test above)
+<!---Recommend setting indices 34, 76, 77, 78, 79, 81 and 82 the same (await
+results of test above) -->
 
-To test: do pixel sizes need to be isotropic in density maps? (index 31)
+<!---To test: do pixel sizes need to be isotropic in density maps? (index 31) -->
 
-To test: do pixel sizes need to be isotropic in source maps? (index
-28(?))
+<!---To test: do pixel sizes need to be isotropic in source maps? (index
+28(?)) -->
 
-Recommend setting indices 31 and 28 the same (await results of tests
-above)
+<!---Recommend setting indices 31 and 28 the same (await results of tests
+above) -->
 
-To test: do parameters on page 1 defining source and phantom
+<!---To test: do parameters on page 1 defining source and phantom
 length/width/height have any impact when simulating voxelwise data?
-(indices 2, 3, 4, 5, 6, 7)
+(indices 2, 3, 4, 5, 6, 7) -->
 
 Recommend setting indices 2, 3, 4, 5, 6, and 7 as appropriate to
 encompass entire relevant part of the data (note that units are in cm)
@@ -225,7 +225,7 @@ basic \*.smc file, but varying one parameter at a time
 > sum of events in the image will remain the same)
 
 In addition, when using voxelwise phantoms, a switch specifying pixel
-size must be used /PX
+size must be used /PX:
 
 We recommend that the input files for density and emission maps are
 specified using switches rather than in **change** since there is a
@@ -233,7 +233,7 @@ character limit of 11 characters stored using **change**
 
 See simind manual for full list of possible runtime switches.
 
-See simind manual for how to use switches in addition to directory referencing (linux can get mixed up).
+See simind manual for how to use switches in addition to directory referencing (note that the description in the SIMIND manual does not currently work for Linux systems - currently being investigated).
 
 Output files from SIMIND
 ========================
@@ -317,7 +317,8 @@ and efficiently using the [convertSIMINDToSTIR.sh](./scripts/convertSIMINDToSTIR
 
 For attenuation correction; use STIR-appropriate attenuation values in
 the reconstruction (ie. Values of approx. 0.15 rather than 1000 for
-water)
+water). Use STIR utility ctac_to_mu_values to convert from CT HU to STIR-
+appropriate attenuation values.
 
 Data Types
 ==========
@@ -359,6 +360,15 @@ Defining attenuation maps
 
     -   If reconstructing in STIR, remember to use STIR-appropriate
         attenuation values
+
+
+Simulation with a non-circular orbit
+=============================================
+- An elliptical orbit can be defined using **Index-42** to define the ratio between major and minor axes. **Index-12** defines the horizontal radius (z-axis in the SIMIND coordinate system)
+- Non-circular orbits based on the edge of the objects in the density map can be defined by setting **Index-42** to <0. The absolute value of **Index-42** adds an airgap between the defined border and the surface of the detector (the detector here meaning the overall device - so could be collimator surface, Al cover or crystal depending on how simulation is set-up). The edge of objects in the density map is defined by **Index-35** - this should be <1 for water (i.e. lower than the g/cm value which defines the relevant border). A value of 0.1 has worked well for a test datset.
+
+Note that the .h00 file produced by simind states "orbit:=noncircular", but STIR headers need "orbit:=Non-circular". Also radii values are in cm rather than mm. These aspects can be resolved by running the convertSIMINDToSTIR_noncirc.sh script (this copies radii values from the .cor output file into a separate text file, and then reads them in to the STIR header in an appropriate format).
+
 
 Other key differences & things to be aware of
 =============================================
