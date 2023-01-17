@@ -5,9 +5,7 @@ Usage:
   STIR_simind [--help | options]
   
 Options:
-  -f <file>, --file=<file>              raw data file [default: template_sinogram.hs]
-  -p <path>, --path=<path>              path to data files, defaults to current directory
-  -s <save>, --save=<save>              path to save files, defaults to current directory
+  -s <save>, --save=<save>              path to save files, defaults to output_files directory
   -a <attn>, --attenuation=<attn>       whether to use attenuation in reconstruction & simulation. True or False.  [default: True]
   --non-interactive                     do not show plots
 '''
@@ -62,18 +60,9 @@ def to_projdata(numpy_array, proj_data_info, exam_info):
     return projdataout
 
 def main(args):
-    
-    data_file = args['--file']
-    if data_file is None:
-        data_file = "template_sinogram.hs"
-
-    data_path = args['--path']
-    if data_path is None:
-        data_path = current_dir
-
     save_path = args['--save']
     if save_path is None:
-        save_path = current_dir
+        save_path = output_dir
 
     if args['--attenuation'] == 'False':
         attenuation = False
@@ -94,7 +83,7 @@ def main(args):
     if show_plot:
         # let's have a loook at out ground truth image
         slice = image.get_lengths()[1]//2 # middle slice
-        plot_show_save(image, "ground_truth", output_dir, slice = slice)
+        plot_show_save(image, "ground_truth", save_path, slice = slice)
 
     # Now we'll add an attenuation image
     if attenuation:
@@ -108,7 +97,7 @@ def main(args):
     if show_plot:
         slice = att_simind.get_lengths()[1]//2 # middle slice
         # The sinogram looks like this
-        plot_show_save(att_simind, "attenuation_image", output_dir, slice = slice)
+        plot_show_save(att_simind, "attenuation_image", save_path, slice = slice)
         
     src = os.path.join(Path(current_dir).parent.absolute(),"input_files")
     
@@ -150,7 +139,7 @@ def main(args):
     if show_plot:
         slice = simind_projdata.get_num_sinograms()//2
         # The sinogram looks like this
-        plot_show_save(simind_projdata, "simind_projdata", output_dir, slice = slice)
+        plot_show_save(simind_projdata, "simind_projdata", save_path, slice = slice)
 
     ### We now use this simulated data to make a rough reconstruction using back projection
 
@@ -179,7 +168,7 @@ def main(args):
     if show_plot:
         slice = stir_projdata.get_num_sinograms()//2
         # The sinogram looks like this
-        plot_show_save(stir_projdata, "stir_projdata", output_dir, slice = slice)
+        plot_show_save(stir_projdata, "stir_projdata", save_path, slice = slice)
         
     ### Now let's reconstruct this using OSEM ###
     
@@ -208,7 +197,7 @@ def main(args):
     if show_plot:
         slice = stir_projdata.get_num_sinograms()//2
     # The recpnstructed image
-    plot_show_save((target), "reconstructed_image", output_dir, slice = slice)
+    plot_show_save((target), "reconstructed_image", save_path, slice = slice)
     
     # unlink all symlinks
     for (root, dirs, files) in os.walk(src):
@@ -220,7 +209,7 @@ def main(args):
     for (root, dirs, files) in os.walk(current_dir):
         for f in files:
             if f.startswith("output"):
-                shutil.move(os.path.join(current_dir,f), os.path.join(output_dir,f))
+                shutil.move(os.path.join(current_dir,f), os.path.join(save_path,f))
     
 args = docopt(__doc__, version=__version__)
 main(args)
