@@ -31,3 +31,5 @@ STIR_simind_tumour.ipynb
 
 # symlink files
 *.lnk
+
+.ipynb_checkpoints
