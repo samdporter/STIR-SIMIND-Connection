@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-
+cd "`dirname $0`"
 if [ $# -ne 1 ]; then
     echo "USAGE: $0 filename.h00 \\" 1>&2
     exit 1

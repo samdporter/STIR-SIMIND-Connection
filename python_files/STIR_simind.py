@@ -18,18 +18,32 @@ from docopt import docopt
 
 import os
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-os.chdir(current_dir)
-
 import stir
 import stirextra
 
 import numpy as np
 import glob
+import os
+import subprocess
+from pathlib import Path # for creating directories
+import shutil # for copying files
 
 import matplotlib.pyplot as plt
 
-def plot_show_save(image, fname, slice = False):
+import platform
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+os.chdir(current_dir)
+
+current_os = platform.system().lower()
+
+parent_dir = Path(current_dir).parent.absolute()
+
+output_dir = os.path.join(parent_dir, 'output_files')
+
+subprocess.run(["mkdir", "-p", output_dir])
+
+def plot_show_save(image, fname, save_dir, slice = False):
         ''' simple image plot and save function '''
         plt.subplot(111)
         if slice:
@@ -37,9 +51,9 @@ def plot_show_save(image, fname, slice = False):
         else:
             plt.imshow(np.squeeze(stirextra.to_numpy(image)))            
         plt.title(fname)
-        plt.savefig(fname)
+        plt.savefig(os.path.join(save_dir, fname))
         plt.show()   
-        image.write_to_file('tmp_'+fname)
+        image.write_to_file(os.path.join(save_dir, fname))
 
 def to_projdata(numpy_array, proj_data_info, exam_info):
     ''' get STIR projection data from numpy array'''
@@ -68,22 +82,19 @@ def main(args):
 
     show_plot = not args['--non-interactive']
 
-    # firstly let's remove all previous outputs from simind in case this has been run before
-    os.system("rm output*")
-
-    # If the sample image and uMap haven't already been generated, let's do that now
-    image_path = os.path.join(current_dir, "emission_image.smi")
-    if not os.path.exists(image_path):  
-        print("nothing at: " + image_path)
-        print("making files")
-        os.system("sh " + os.path.join(current_dir, "generate_input_data.sh"))
+    # let's generate some data
+    generate_data = os.path.join(Path(current_dir).parent.absolute(), 'scripts', 'generate_input_data.sh')
+    if Path(generate_data).exists():
+        subprocess.run(["sh", generate_data, current_os])
+    else:
+        print('generate_input_data.sh not found')
 
     image = stir.FloatVoxelsOnCartesianGrid.read_from_file(os.path.join(current_dir, "emission_image.hv")) 
 
     if show_plot:
         # let's have a loook at out ground truth image
         slice = image.get_lengths()[1]//2 # middle slice
-        plot_show_save(image, "ground_truth", slice = slice)
+        plot_show_save(image, "ground_truth", output_dir, slice = slice)
 
     # Now we'll add an attenuation image
     if attenuation:
@@ -97,7 +108,16 @@ def main(args):
     if show_plot:
         slice = att_simind.get_lengths()[1]//2 # middle slice
         # The sinogram looks like this
-        plot_show_save(att_simind, "attenuation_image", slice = slice)
+        plot_show_save(att_simind, "attenuation_image", output_dir, slice = slice)
+        
+    src = os.path.join(Path(current_dir).parent.absolute(),"input_files")
+    
+    for (root, dirs, files) in os.walk(src):
+        for f in files:
+            if not os.path.exists(os.path.join(current_dir,"symlink_"+f)):
+                os.symlink(os.path.join(src,f), os.path.join(current_dir,"symlink_"+f))
+                print("symlink @ " + os.path.join(src,"symlink_"+f))
+            else: print("symlink already exists")
 
     ### now some bash commands ###
     # The following bash command defines a .smc file `input.smc` follwed by a prefix for output files `output` \
@@ -108,8 +128,8 @@ def main(args):
     #    * /FD: defines the prefix for rhe .dmi attenuation image file
     
 
-    os.system("simind input.smc output/NN:1/PX:0.4/FS:emission_image/FD:attenuation_image_simind")
-
+    subprocess.run(["simind", "symlink_input", "output" ,"/NN:.01", "/PX:0.4", 
+                    "/FS:emission_image.smi", "/FD:attenuation_image.dmi"])
 
     # And (assuming the preious cell ran) we have now simulated our SPECT data!
     # Next we need to get this data into a format the SIRF will recognise. 
@@ -117,7 +137,8 @@ def main(args):
     # This script changes a few lines in the data's header file and the header file suffix. 
     # Differences between the conventions of interfiles in SIMIND and STIR/SIRF can be found in Rebecca's notes.
 
-    os.system("sh " + os.path.join(current_dir , "convertSIMINDToSTIR.sh") + " output_tot_w1.h00")
+    subprocess.run(["sh", os.path.join("..", "scripts", "convertSIMINDToSTIR.sh"), 
+                    os.path.join(current_dir, "output_tot_w1.h00")])
 
     # And we can now create STIR projection data 
     simind_projdata_flipped =  stir.ProjData.read_from_file("output_tot_w1.hs")
@@ -129,7 +150,7 @@ def main(args):
     if show_plot:
         slice = simind_projdata.get_num_sinograms()//2
         # The sinogram looks like this
-        plot_show_save(simind_projdata, "simind_projdata", slice = slice)
+        plot_show_save(simind_projdata, "simind_projdata", output_dir, slice = slice)
 
     ### We now use this simulated data to make a rough reconstruction using back projection
 
@@ -158,7 +179,7 @@ def main(args):
     if show_plot:
         slice = stir_projdata.get_num_sinograms()//2
         # The sinogram looks like this
-        plot_show_save(stir_projdata, "stir_projdata", slice = slice)
+        plot_show_save(stir_projdata, "stir_projdata", output_dir, slice = slice)
         
     ### Now let's reconstruct this using OSEM ###
     
@@ -173,6 +194,7 @@ def main(args):
     recon.set_num_subsets(9)
     recon.set_num_subiterations(9)
     recon.set_max_num_full_iterations(1)
+    recon.set_disable_output(True)
     
     # create a dummy image to fill with out reconstructed image
     target = image.get_empty_copy()
@@ -186,7 +208,19 @@ def main(args):
     if show_plot:
         slice = stir_projdata.get_num_sinograms()//2
     # The recpnstructed image
-    plot_show_save((target), "reconstructed_image", slice = slice)
+    plot_show_save((target), "reconstructed_image", output_dir, slice = slice)
+    
+    # unlink all symlinks
+    for (root, dirs, files) in os.walk(src):
+        for f in files:
+            if os.path.exists(os.path.join(current_dir,"symlink_"+f)):
+                os.unlink(os.path.join(current_dir,"symlink_"+f))
+    
+    # move output files to output directory
+    for (root, dirs, files) in os.walk(current_dir):
+        for f in files:
+            if f.startswith("output"):
+                shutil.move(os.path.join(current_dir,f), os.path.join(output_dir,f))
     
 args = docopt(__doc__, version=__version__)
 main(args)
