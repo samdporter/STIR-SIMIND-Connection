@@ -233,7 +233,9 @@ character limit of 11 characters stored using **change**
 
 See simind manual for full list of possible runtime switches.
 
-See simind manual for how to use switches in addition to directory referencing (note that the description in the SIMIND manual does not currently work for Linux systems - currently being investigated).
+See simind manual for how to use switches in addition to directory referencing (note that the description in the SIMIND manual does not currently work for Linux systems - recommend input and output files are saved in the same directory for now, otherwise see Sam Porter's example Jupyter notebook [STIR_simind.ipynb](../python_files/STIR_simind.ipynb) or Python script [STIR_simind.py](../python_files/STIR_simind.py) which include use of symlink).
+
+
 
 Output files from SIMIND
 ========================
@@ -268,7 +270,7 @@ Reconstructing SIMIND Data using STIR
 SIMIND output data can be reconstructed with STIR. First, a few tweaks
 need to be made to the header file to convert it to a STIR-friendly
 form. Steps are included below, but note that this can be done quickly
-and efficiently using the [convertSIMINDToSTIR.sh](./scripts/convertSIMINDToSTIR.sh) script, note that you will also need the corresponding
+and efficiently using the [convertSIMINDToSTIR.sh](../scripts/convertSIMINDToSTIR.sh) script, note that you will also need the corresponding
 .awk file in the same folder)
 
 -   make a copy of the .h00 file, and rename it with extension \*.hs
