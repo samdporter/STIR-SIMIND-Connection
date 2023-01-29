@@ -2,7 +2,7 @@ Instructions for those familiar with the use of STIR
 
 Authors: Rebecca Gillen, Sam Porter, Kris Thielemans
 
-Contact: <Rebecca.gillen.18@ucl.ac.uk>, <Sam.Porter.18@ucl.ac.uk>
+Contact: <Rebecca.gillen.18@ucl.ac.uk>, <Sam.Porter.18@ucl.ac.uk>, or subscribe to the STIR users mailing list <https://sourceforge.net/projects/stir/lists/stir-users>
 
 Useful links
 ============
@@ -26,9 +26,44 @@ of Main page in change)
 
 <http://stir.sourceforge.net/documentation/STIR-developers-overview.pdf>
 
-**Jupyter notebook demo and example STIR and SIMIND files)**[^1]
 
-TO DO: ADD LINKS TO SPECIFIC FILES WITHIN THIS REPO
+Useful files
+============
+
+**Jupyter notebook demo and example python script**[^1]
+
+Jupyter notebook [STIR_simind.ipynb](../python_files/STIR_simind.ipynb)
+
+Python script [STIR_simind.py](../python_files/STIR_simind.py)
+
+
+**Other useful STIR and SIMIND files**
+
+*SIMIND*:
+
+Example .smc file [input.smc](../input_files/input.smc)
+
+Example file for specifying energy windows [input.win](../input_files/input.win)
+
+*STIR*:
+example parameter files for generating data
+
+[generate_emission_image.par](../parameter_files/generate_emission_image.par)
+
+[generate_attenuation_image.par](../parameter_files/generate_attenuation_image.par)
+
+example parameter file for forward projection of SPECT data
+
+[forward_project_SPECT.par](../parameter_files/forward_project_SPECT.par)
+
+*Combining STIR and SIMIND*:
+
+scripts to convert SIMIND headers to STIR-friendly format (.awk file should be in the same directory as .sh file):
+
+Circular orbit [convertSIMINDToSTIR.sh](../scripts/convertSIMINDToSTIR.sh) and [convertSIMINDToSTIR.awk](../scripts/convertSIMINDToSTIR.awk)
+
+Non-circular orbit [convertSIMINDToSTIR_noncirc.sh](../scripts/convertSIMINDToSTIR_noncirc.sh) and [convertSIMINDToSTIR_noncirc.awk](../scripts/convertSIMINDToSTIR_noncirc.awk)
+
 
 Getting started with SIMIND
 ===========================
@@ -36,7 +71,7 @@ Getting started with SIMIND
 Follow the instructions for download and install from
 <https://simind.blogg.lu.se/downloads/>
 
-(*V7.0 available at 06/09/2022*)
+(*V7.0 available at 06/09/2022* / *updated v7 with linux directory referencing available from 23/01/23*)
 
 There are two key programs within SIMIND:
 
@@ -86,13 +121,13 @@ Opens “Main” page in order to edit simind.smc file
 
 -   Should be considered a temporary file
 
-    ![](.//media/image1.png)
+    ![](../media/image1.png)
 
 &gt; change filename.smc
 
 Opens “Main” page in order to edit a specific \*.smc file
 
-![](.//media/image2.png)
+![](../media/2.png)
 
 Once this menu is opened, you can:
 
@@ -233,7 +268,7 @@ character limit of 11 characters stored using **change**
 
 See simind manual for full list of possible runtime switches.
 
-See simind manual for how to use switches in addition to directory referencing (note that the description in the SIMIND manual does not currently work for Linux systems - recommend input and output files are saved in the same directory for now, otherwise see Sam Porter's example Jupyter notebook [STIR_simind.ipynb](../python_files/STIR_simind.ipynb) or Python script [STIR_simind.py](../python_files/STIR_simind.py) which include use of symlink).
+See simind manual for how to use switches in addition to directory referencing (note that the description in the SIMIND manual will only work for Linux systems for simind software downloaded after 23rd Jan 2023. Otherwise input and output files should be saved in the same directory - or see Sam Porter's example Jupyter notebook [STIR_simind.ipynb](../python_files/STIR_simind.ipynb) or Python script [STIR_simind.py](../python_files/STIR_simind.py) which include use of symlink).
 
 
 
@@ -408,7 +443,7 @@ Other key differences & things to be aware of
 
     -   STIR
 
-        ![](.//media/image3.png)
+        ![](../media/image3.png)
 
         <http://stir.sourceforge.net/wiki/index.php/STIR_FAQ#How_does_the_STIR_coordinate_system_work_.28e.g._for_generate_image.29>
 
@@ -427,7 +462,7 @@ Other key differences & things to be aware of
             rotates in the ZY plane either clockwise or
             counter-clockwise (controlled by index 30)
 
-![](.//media/image4.png)
+![](../media/image4.png)
 
 Disclaimer:
 ===========
@@ -440,11 +475,11 @@ The authors welcome any additions/corrections.
 Appendix 1 – old Main page in change for SIMIND v6.1
 ====================================================
 
-![](.//media/image5.png)
+![](../media/image5.png)
 
 
 
-[^1]: These may be added to STIR examples
+[^1]: These may be added to STIR examples at a later date
 
 [^2]: In v6.2, it was possible to update comment sentence, but don’t
     seem to be able to do this with V7 (manual says you can change using
